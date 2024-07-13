@@ -171,9 +171,9 @@ public:
 
           expression += st.pop();
         }
-        // st.traverse();
+        st.traverse();
         st.push(item);
-        // st.traverse();
+        st.traverse();
       } else {
         expression += item;
       }
@@ -215,7 +215,7 @@ int main(int argc, char const *argv[]) {
   cin >> infix;
 
   infix_to_prefix infixToPre;
-  string expression = infixToPre.convert(infix);
+  string expression = infixToPre.convert_pre(infix);
   cout << "Prefix Expression is: " << expression << endl;
 
   return 0;
