@@ -1,6 +1,6 @@
-#include<algorithm>
-#include<iostream>
-#include<string>
+#include <algorithm>
+#include <iostream>
+#include <string>
 using namespace std;
 
 template <typename gen> class stack {
@@ -47,7 +47,7 @@ public:
   }
 
   gen pop() {
-    if (top == -1) {
+    if (isEmpty()) {
       cout << "Stack is Empty/Underflow." << endl;
       return gen();
     }
@@ -62,7 +62,7 @@ public:
   }
 
   gen peek() {
-    if (top == -1) {
+    if (isEmpty()) {
       cout << "Stack is Empty/Underflow." << endl;
       return gen();
     }
@@ -70,12 +70,10 @@ public:
     return st[top];
   }
 
-  bool isEmpty() {
-    return top == -1;
-  }
+  bool isEmpty() { return top == -1; }
 
   gen traverse() {
-    if (top == -1) {
+    if (isEmpty()) {
       cout << "Stack is Empty/Underflow." << endl;
       return gen();
     }
@@ -126,19 +124,19 @@ public:
   }
 
   bool is_operator(char c) {
-      return (c == '^' || c == '*' || c == '/' || c == '+' || c == '-');
+    return (c == '^' || c == '*' || c == '/' || c == '+' || c == '-');
   }
 
-  bool has_higher_precedence(char top, char current) {
-      int top_precedence = get_precedence(top);
-      int current_precedence = get_precedence(current);
-      if (top_precedence > current_precedence) {
-          return true;
-      }
-      if (top_precedence == current_precedence) {
-          return associativity(current) == 'L';
-      }
-      return false;
+  bool has_lower_precedence(char top, char current) {
+    int top_precedence = get_precedence(top);
+    int current_precedence = get_precedence(current);
+    if (top_precedence > current_precedence) {
+      return true;
+    }
+    if (top_precedence == current_precedence) {
+      return associativity(current) == 'L';
+    }
+    return false;
   }
 
   string convert(string str) {
@@ -158,16 +156,14 @@ public:
 
       } else if (is_operator(item)) {
 
-        // 1. check precedence is lower then top of the stack then pop from
-        // stack and check again new top
-        // 2.  check precedence is equal to top of the stack then use
-        // associativity rule
-        // associativity rule:
-        // L to R then pop from stack and push new item
-        // R to L then push new item
+        // 1. check precedence if current element is lower then top of the stack
+        // then pop from stack and check again new top
+        // 2.  check precedence if current element is equal to top of the stack
+        // then use associativity rule associativity rule: L to R then pop from
+        // stack and push new item R to L then push new item
         // 3. check precedence is higher then top of the stack then push it on
         // the stack
-        while (!st.isEmpty() && has_higher_precedence(st.peek(), item)) {
+        while (!st.isEmpty() && has_lower_precedence(st.peek(), item)) {
 
           expression += st.pop();
         }
@@ -187,26 +183,25 @@ public:
   }
 
   void replace_parentheses(string &str) {
-      for (char &c : str) {
-          if (c == '(') {
-              c = ')';
-          } else if (c == ')') {
-              c = '(';
-          }
+    for (char &c : str) {
+      if (c == '(') {
+        c = ')';
+      } else if (c == ')') {
+        c = '(';
       }
+    }
   }
 
-  string convert_pre(string str){
+  string convert_pre(string str) {
     reverse(str.begin(), str.end());
-    cout<<"before replace: "<<str<<endl;
+    cout << "before replace: " << str << endl;
     replace_parentheses(str);
-    cout<<"before: "<<str<<endl;
+    cout << "before: " << str << endl;
     str = convert(str);
-    cout<<"after: "<<str<<endl;
+    cout << "after: " << str << endl;
     reverse(str.begin(), str.end());
     return str;
   }
-
 };
 
 int main(int argc, char const *argv[]) {
